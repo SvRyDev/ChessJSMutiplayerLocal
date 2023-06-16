@@ -2,6 +2,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Panel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -14,22 +15,25 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /**
- * CODIGO INICIAL BY Khouiled
- * MODIFICADO BY Arthur
+ * CODIGO INICIAL BY Khouiled MODIFICADO BY Arthur
  */
 public class ChessGame {
+
+    public static int coordTableroX = 50, coordTableroY = 50;
 
     //Creacion de lista doblemente enlazada (LinkedList)para generar las piezas del tablero
     public static LinkedList<Piece> ps = new LinkedList<>();
     //Objeto de la Pieza Seleccionada
     public static Piece selectedPiece = null;
 
+    public Color color;
+
     //Metodo Principal - Metodo de arranque del programa
     public static void main(String[] args) throws IOException {
-        
+
         //Cargar Imagen por BufferedImage - Libreria BufferedImage & ImageIo
-        BufferedImage imgPrincipal  = ImageIO.read(new File("D:\\Archivos-Usuario\\Documentos\\NetBeansProjects\\ChessJavaMultiplayer\\src\\img\\pieces.png"));
-        
+        BufferedImage imgPrincipal = ImageIO.read(new File("D:\\Archivos-Usuario\\Documentos\\NetBeansProjects\\ChessJavaMultiplayer\\src\\img\\pieces.png"));
+
         //Arreglo de imagen - Libreria Awt 
         Image imgs[] = new Image[12];
         //Indice
@@ -43,9 +47,8 @@ public class ChessGame {
                 ind++;
             }
         }
-        
+
         //Creacion de los objetos tipo Piezas - 16 Piezas
-        
         Piece brook = new Piece(0, 0, false, "torre", ps);
         Piece bkinght = new Piece(1, 0, false, "caballo", ps);
         Piece bbishop = new Piece(2, 0, false, "alfil", ps);
@@ -83,11 +86,17 @@ public class ChessGame {
         //objeto jframe para la generar la vista principal
         JFrame frame = new JFrame();
         //dimensionar la ventana jframe
-        frame.setBounds(10, 10, 812, 812);
+        frame.setBounds(0, 0, 812, 812);
         //Eliminar los botones de la barra de titulo: cerrar, minimizar
         frame.setUndecorated(true);
         //objeto jpanel como un pequeño panel que de añadira a la ventana principal
         JPanel pn = new JPanel() {
+
+            @Override
+            public void setBounds(int x, int y, int width, int height) {
+                super.setBounds(coordTableroX, coordTableroY, width, height);
+            }
+
             //override para el polimorfismo
             @Override
             //generacion de coloreado en la ventana
@@ -142,18 +151,34 @@ public class ChessGame {
             }
 
         };
-        
         //añadir el panel en el jframe
         frame.add(pn);
+        frame.setLocationRelativeTo(null);
 
         frame.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (selectedPiece != null) {
-                    selectedPiece.x = e.getX() - 32;
-                    selectedPiece.y = e.getY() - 32;
+                    if (e.getX() >= 512 + coordTableroX) {
+                        selectedPiece.x = 480;
+                    } else if (e.getX() <= 0 + coordTableroX) {
+                        selectedPiece.x = -32;
+                    } else {
+                        selectedPiece.x = e.getX() - 32 - coordTableroX;
+                    }
+
+                    if (e.getY() >= 512 + coordTableroX) {
+                        selectedPiece.y = 480;
+                    } else if (e.getY() <= 0 + coordTableroY) {
+                        selectedPiece.y = -32;
+                    } else {
+                        selectedPiece.y = e.getY() - 32 - coordTableroY;
+                    }
+
+                    System.out.println(selectedPiece.isWhite + selectedPiece.name + ": " + selectedPiece.x + " :: " + selectedPiece.y);
                     frame.repaint();
                 }
+
             }
 
             @Override
@@ -168,14 +193,19 @@ public class ChessGame {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                System.out.println((getPiece(e.getX(), e.getY()).isWhite?"white ":"balck ")+getPiece(e.getX(), e.getY()).name);
                 selectedPiece = getPiece(e.getX(), e.getY());
+
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                selectedPiece.move(e.getX() / 64, e.getY() / 64);
-                frame.repaint();
+                if (selectedPiece != null) {
+                    selectedPiece.move((selectedPiece.x + 31) / 64, (selectedPiece.y + 31) / 64);
+                    System.out.println(selectedPiece.xp + ":" + selectedPiece.yp);
+                    frame.repaint();
+
+                }
+                selectedPiece = null;
             }
 
             @Override
@@ -192,14 +222,23 @@ public class ChessGame {
     }
 
     public static Piece getPiece(int x, int y) {
-        int xp = x / 64;
-        int yp = y / 64;
+        Piece piecita;
+
+        double xc = (x - coordTableroX);
+        double yc = (y - coordTableroY);
+
+        double xp = xc / 64;
+        double yp = yc / 64;
+        System.out.println(xp + "___" + yp);
         for (Piece p : ps) {
-            if (p.xp == xp && p.yp == yp) {
-                return p;
+
+            if (p.xp == Math.floor(xp) && p.yp == Math.floor(yp)) {
+
+                piecita = new Piece(p.xp, p.yp, p.isWhite, p.name, p.ps);
+                p.kill();
+                return piecita;
             }
         }
         return null;
     }
 }
-

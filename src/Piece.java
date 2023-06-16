@@ -30,6 +30,7 @@ public class Piece {
             } else {
                 x = this.xp * 64;
                 y = this.yp * 64;
+                System.out.println("No puede matar a su mismo color, no sea Imbecil >:v");
                 return;
             }
         }
