@@ -32,7 +32,7 @@ public class ChessGame {
     public static void main(String[] args) throws IOException {
 
         //Cargar Imagen por BufferedImage - Libreria BufferedImage & ImageIo
-        BufferedImage imgPrincipal = ImageIO.read(new File("D:\\Archivos-Usuario\\Documentos\\NetBeansProjects\\ChessJavaMultiplayer\\src\\img\\pieces.png"));
+        BufferedImage imgPrincipal = ImageIO.read(new File("C:\\xampp\\htdocs\\ChessJSMutiplayerLocal\\src\\img\\pieces.png"));
 
         //Arreglo de imagen - Libreria Awt 
         Image imgs[] = new Image[12];
@@ -151,32 +151,33 @@ public class ChessGame {
             }
 
         };
+
         //añadir el panel en el jframe
         frame.add(pn);
         frame.setLocationRelativeTo(null);
 
-        frame.addMouseMotionListener(new MouseMotionListener() {
+        pn.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (selectedPiece != null) {
-                    if (e.getX() >= 512 + coordTableroX) {
+                    if (e.getX() >= 512) {
                         selectedPiece.x = 480;
-                    } else if (e.getX() <= 0 + coordTableroX) {
+                    } else if (e.getX() <= 0) {
                         selectedPiece.x = -32;
                     } else {
-                        selectedPiece.x = e.getX() - 32 - coordTableroX;
+                        selectedPiece.x = e.getX() - 32;
                     }
 
-                    if (e.getY() >= 512 + coordTableroX) {
+                    if (e.getY() >= 512) {
                         selectedPiece.y = 480;
-                    } else if (e.getY() <= 0 + coordTableroY) {
+                    } else if (e.getY() <= 0) {
                         selectedPiece.y = -32;
                     } else {
-                        selectedPiece.y = e.getY() - 32 - coordTableroY;
+                        selectedPiece.y = e.getY() - 32;
                     }
 
                     System.out.println(selectedPiece.isWhite + selectedPiece.name + ": " + selectedPiece.x + " :: " + selectedPiece.y);
-                    frame.repaint();
+                    pn.repaint();
                 }
 
             }
@@ -186,7 +187,7 @@ public class ChessGame {
             }
         });
 
-        frame.addMouseListener(new MouseListener() {
+        pn.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
             }
@@ -200,9 +201,9 @@ public class ChessGame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (selectedPiece != null) {
-                    selectedPiece.move((selectedPiece.x + 31) / 64, (selectedPiece.y + 31) / 64);
+                    selectedPiece.move(selectedPiece.x / 64, selectedPiece.y / 64);
                     System.out.println(selectedPiece.xp + ":" + selectedPiece.yp);
-                    frame.repaint();
+                    pn.repaint();
 
                 }
                 selectedPiece = null;
@@ -224,15 +225,12 @@ public class ChessGame {
     public static Piece getPiece(int x, int y) {
         Piece piecita;
 
-        double xc = (x - coordTableroX);
-        double yc = (y - coordTableroY);
-
-        double xp = xc / 64;
-        double yp = yc / 64;
+        int xp = x / 64;
+        int yp = y / 64;
         System.out.println(xp + "___" + yp);
         for (Piece p : ps) {
 
-            if (p.xp == Math.floor(xp) && p.yp == Math.floor(yp)) {
+            if (p.xp == xp && p.yp == yp) {
 
                 piecita = new Piece(p.xp, p.yp, p.isWhite, p.name, p.ps);
                 p.kill();
