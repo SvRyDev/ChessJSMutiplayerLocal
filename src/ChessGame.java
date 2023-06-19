@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -28,11 +29,15 @@ public class ChessGame {
 
     public Color color;
 
+    private static JLabel texto1;
+
+    ;
+
     //Metodo Principal - Metodo de arranque del programa
     public static void main(String[] args) throws IOException {
 
         //Cargar Imagen por BufferedImage - Libreria BufferedImage & ImageIo
-        BufferedImage imgPrincipal = ImageIO.read(new File("C:\\xampp\\htdocs\\ChessJSMutiplayerLocal\\src\\img\\pieces.png"));
+        BufferedImage imgPrincipal = ImageIO.read(new File("D:\\Archivos-Usuario\\Documentos\\NetBeansProjects\\ChessMutiplayerLocal\\src\\img\\pieces.png"));
 
         //Arreglo de imagen - Libreria Awt 
         Image imgs[] = new Image[12];
@@ -95,6 +100,7 @@ public class ChessGame {
             @Override
             public void setBounds(int x, int y, int width, int height) {
                 super.setBounds(coordTableroX, coordTableroY, width, height);
+                //super.setBounds(0, 0, width, height);
             }
 
             //override para el polimorfismo
@@ -152,7 +158,10 @@ public class ChessGame {
 
         };
 
+        texto1 = new JLabel("JUEGO DEL AJEDRE XXDXDXDX");
+        texto1.setBounds(600, 90, 300, 30);
         //añadir el panel en el jframe
+        frame.add(texto1);
         frame.add(pn);
         frame.setLocationRelativeTo(null);
 
@@ -177,7 +186,7 @@ public class ChessGame {
                     }
 
                     System.out.println(selectedPiece.isWhite + selectedPiece.name + ": " + selectedPiece.x + " :: " + selectedPiece.y);
-                    pn.repaint();
+                    frame.repaint();
                 }
 
             }
@@ -195,17 +204,21 @@ public class ChessGame {
             @Override
             public void mousePressed(MouseEvent e) {
                 selectedPiece = getPiece(e.getX(), e.getY());
+                Moves asd = new Moves();
+                System.out.println("▓▓▓▓▓");
+                System.out.println(asd.imprimirCordenadasSalida());
 
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (selectedPiece != null) {
-                    selectedPiece.move(selectedPiece.x / 64, selectedPiece.y / 64);
+                    selectedPiece.move((selectedPiece.x + 31) / 64, (selectedPiece.y + 31) / 64);
                     System.out.println(selectedPiece.xp + ":" + selectedPiece.yp);
-                    pn.repaint();
+                    frame.repaint();
 
                 }
+                System.out.println("la coordenada del apnel es " + pn.getBounds());
                 selectedPiece = null;
             }
 
@@ -218,6 +231,7 @@ public class ChessGame {
             }
         });
 
+        texto1 = new JLabel("Hola esto es un pequeño texto");
         frame.setDefaultCloseOperation(3);
         frame.setVisible(true);
     }
