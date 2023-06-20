@@ -1,4 +1,5 @@
 
+import Elementos.Torre;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -37,7 +38,7 @@ public class ChessGame {
     public static void main(String[] args) throws IOException {
 
         //Cargar Imagen por BufferedImage - Libreria BufferedImage & ImageIo
-        BufferedImage imgPrincipal = ImageIO.read(new File("D:\\Archivos-Usuario\\Documentos\\NetBeansProjects\\ChessMutiplayerLocal\\src\\img\\pieces.png"));
+        BufferedImage imgPrincipal = ImageIO.read(new File("C:\\xampp\\htdocs\\ChessMutiplayerLocal\\src\\img\\pieces.png"));
 
         //Arreglo de imagen - Libreria Awt 
         Image imgs[] = new Image[12];
@@ -87,6 +88,7 @@ public class ChessGame {
         Piece wpawn6 = new Piece(6, 6, true, "peon", ps);
         Piece wpawn7 = new Piece(7, 6, true, "peon", ps);
         Piece wpawn8 = new Piece(0, 6, true, "peon", ps);
+
 
         //objeto jframe para la generar la vista principal
         JFrame frame = new JFrame();
