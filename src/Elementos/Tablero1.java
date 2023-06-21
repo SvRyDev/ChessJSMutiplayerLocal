@@ -1,11 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package Elementos;
 
+import static Elementos.ventanaPrueba.principal;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 
 /**
  *
@@ -25,19 +27,21 @@ public class Tablero1 extends javax.swing.JPanel {
     }
 
     public Tablero1(int filas, int columnas, int dimension, Color color1, Color color2) {
-        initComponents();
-        this.setSize(filas * dimension, columnas * dimension);
+        //initComponents();
+        eventosMouse();
+        this.setBounds(50, 50, filas * dimension, columnas * dimension);
         this.filas = filas;
         this.columnas = columnas;
         this.dimension = dimension;
         this.color1 = color1;
         this.color2 = color2;
+
     }
 
     @Override
     public void paint(Graphics g) {
         boolean white = true;
-        
+
         for (int y = 0; y < columnas; y++) {
             for (int x = 0; x < filas; x++) {
                 if (white) {
@@ -51,20 +55,66 @@ public class Tablero1 extends javax.swing.JPanel {
             white = !white;
         }
     }
+    
+    void colocarPiezas(){
+        
+    }
+
+    private void eventosMouse() {
+        addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+           
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+
+        }
+        );
+        addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                principal.txtCordenadas.setText("arrastrando:  " + e.getX() + " Y " + e.getY());
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+            }
+
+        });
+
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        setBackground(new java.awt.Color(255, 204, 51));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 1032, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 582, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
