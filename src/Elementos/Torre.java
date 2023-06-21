@@ -13,12 +13,16 @@ import java.util.LinkedList;
 public class Torre extends Pieza {
 
     static int id = 1;
-    static String nomnbre = "Torre";
+    static String nombre = "Torre";
 
     public Torre(int corTableroX, int corTableroY, boolean esBlanco, LinkedList<Pieza> listaPiezas) {
         super(corTableroX, corTableroY, esBlanco, listaPiezas);
     }
 
-
+    @Override
+    public int[][] marcarMovimiento() {
+        int[][] arrglo = null;
+        return arrglo;
+    }
 
 }

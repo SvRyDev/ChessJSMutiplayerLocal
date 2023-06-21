@@ -82,6 +82,12 @@ public class Pieza {
         return imgs[0];
     }
 
+    
+    public int[][] marcarMovimiento() {
+        int[][] arrglo= null;
+        return arrglo;
+    }
+    
     public void mover() {
     }
 

@@ -59,6 +59,7 @@ public class Tablero1 extends javax.swing.JPanel {
     void colocarPiezas(){
         
     }
+    
 
     private void eventosMouse() {
         addMouseListener(new MouseListener() {
