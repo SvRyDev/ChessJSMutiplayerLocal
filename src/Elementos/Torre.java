@@ -20,7 +20,14 @@ public class Torre extends Pieza {
     }
 
     @Override
-    public int[][] marcarMovimiento() {
+    public int[][] marcarMovimiento(int posicionX, int posicionY) {
+        
+        int x = posicionX;
+        int y = posicionY;
+
+        for (int i = posicionX; i < 0; i--) {
+            System.out.println("Coordenada de torre : ("++);
+        }
         int[][] arrglo = null;
         return arrglo;
     }

@@ -83,7 +83,7 @@ public class Pieza {
     }
 
     
-    public int[][] marcarMovimiento() {
+    public int[][] marcarMovimiento(int posicionX, int posicionY) {
         int[][] arrglo= null;
         return arrglo;
     }
