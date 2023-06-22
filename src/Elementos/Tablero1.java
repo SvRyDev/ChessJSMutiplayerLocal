@@ -6,8 +6,11 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import org.w3c.dom.css.RGBColor;
 
 /**
  *
@@ -22,8 +25,21 @@ public class Tablero1 extends javax.swing.JPanel {
     Color color1;
     Color color2;
 
+    //CUADRADOR PARA MARCAR CUANDO SE SELCCIONA LA PIEZA
+    Bloque[][] cuadrados;
+
+    static LinkedList<Pieza> ps = new LinkedList<>();
+
+    Pieza piezaAux;
+
+    Torre Btorre1 = new Torre(0, 0, true, ps);
+    Torre Ntorre1 = new Torre(7, 0, false, ps);
+    Torre Btorre2 = new Torre(7, 7, true, ps);
+    Torre Ntorre2 = new Torre(0, 7, false, ps);
+
     public Tablero1() {
         initComponents();
+
     }
 
     public Tablero1(int filas, int columnas, int dimension, Color color1, Color color2) {
@@ -36,12 +52,37 @@ public class Tablero1 extends javax.swing.JPanel {
         this.color1 = color1;
         this.color2 = color2;
 
+        cuadrados = new Bloque[filas][columnas];
+
+        for (int y = 0; y < columnas; y++) {
+            for (int x = 0; x < filas; x++) {
+                cuadrados[x][y] = new Bloque(x * 64, y * 64, dimension, new Color(255, 255, 255, 0));
+            }
+        }
+
+    }
+
+    public void movimientosPieza() {
+        for (int i = 0; i < piezaAux.marcarMovimiento(piezaAux.corTableroX, piezaAux.corTableroY).size(); i++) {
+            cuadrados[piezaAux.marcarMovimiento(piezaAux.corTableroX, piezaAux.corTableroY).get(i).x][piezaAux.marcarMovimiento(piezaAux.corTableroX, piezaAux.corTableroY).get(i).y].setColor(Color.black);
+        }
+        repaint();
+
+        System.out.println("LA SALIDA DE LA IMAGEN DE TORRE ES  : " + piezaAux.fotopieza);
+    }
+
+    public void limpiarMovimientos() {
+        for (int i = 0; i < piezaAux.marcarMovimiento(piezaAux.corTableroX, piezaAux.corTableroY).size(); i++) {
+            cuadrados[piezaAux.marcarMovimiento(piezaAux.corTableroX, piezaAux.corTableroY).get(i).x][piezaAux.marcarMovimiento(piezaAux.corTableroX, piezaAux.corTableroY).get(i).y].setColor(new Color(255, 255, 255, 0));
+        }
+        repaint();
+
+        System.out.println("LA SALIDA DE LA IMAGEN DE TORRE ES  : " + piezaAux.fotopieza);
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         boolean white = true;
-
         for (int y = 0; y < columnas; y++) {
             for (int x = 0; x < filas; x++) {
                 if (white) {
@@ -49,17 +90,94 @@ public class Tablero1 extends javax.swing.JPanel {
                 } else {
                     g.setColor(color2);
                 }
-                g.fillRect(x * dimension, y * dimension, dimension, dimension);
                 white = !white;
+                g.fillRect(x * 64, y * 64, dimension, dimension);
             }
             white = !white;
         }
+
+        for (int y = 0; y < columnas; y++) {
+            for (int x = 0; x < filas; x++) {
+                g.setColor(cuadrados[x][y].getColor());
+                g.fillOval(cuadrados[x][y].getX() + 16, cuadrados[x][y].getY() + 16, cuadrados[x][y].getDimension() - 32, cuadrados[x][y].getDimension() - 32);
+            }
+        }
+
+        for (Pieza p : ps) {
+            g.drawImage(p.fotopieza, p.corVentX, p.corVentY, this);
+        }
+
     }
-    
-    void colocarPiezas(){
-        
+
+    public class Bloque {
+
+        int x;
+        int y;
+        int dimension;
+        Color color;
+
+        public Bloque(int x, int y, int dimension, Color color) {
+            this.x = x;
+            this.y = y;
+            this.dimension = dimension;
+            this.color = color;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public void setX(int x) {
+            this.x = x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public void setY(int y) {
+            this.y = y;
+        }
+
+        public int getDimension() {
+            return dimension;
+        }
+
+        public void setDimension(int dimension) {
+            this.dimension = dimension;
+        }
+
+        public Color getColor() {
+            return color;
+        }
+
+        public void setColor(Color color) {
+            this.color = color;
+        }
+
     }
-    
+
+    public void pintarCasilla(ArrayList coo) {
+
+    }
+
+    public static Pieza getPiece(int x, int y) {
+        Pieza piecita;
+
+        int xp = x / 64;
+        int yp = y / 64;
+        System.out.println(xp + "___" + yp);
+        for (Pieza p : ps) {
+
+            if (p.corTableroX == xp && p.corTableroY == yp) {
+
+                piecita = new Torre(p.corTableroX, p.corTableroY, p.esBlanco, p.listaPiezas);
+                p.asesinar();
+                return piecita;
+            }
+        }
+        return null;
+    }
 
     private void eventosMouse() {
         addMouseListener(new MouseListener() {
@@ -69,12 +187,21 @@ public class Tablero1 extends javax.swing.JPanel {
 
             @Override
             public void mousePressed(MouseEvent e) {
-           
+                piezaAux = getPiece(e.getX(), e.getY());
+                movimientosPieza();
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
+                limpiarMovimientos();
+                if (piezaAux != null) {
+                    piezaAux.mover((piezaAux.corVentX + 31) / 64, (piezaAux.corVentY + 31) / 64);
+                    System.out.println(piezaAux.corTableroX + ":" + piezaAux.corTableroY);
+                    repaint();
 
+                }
+                System.out.println("la coordenada del apnel es " + getBounds());
+                piezaAux = null;
             }
 
             @Override
@@ -90,7 +217,11 @@ public class Tablero1 extends javax.swing.JPanel {
         addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                piezaAux.corVentX = e.getX() - dimension/2;
+                piezaAux.corVentY = e.getY() - dimension/2;
                 principal.txtCordenadas.setText("arrastrando:  " + e.getX() + " Y " + e.getY());
+
+                repaint();
             }
 
             @Override

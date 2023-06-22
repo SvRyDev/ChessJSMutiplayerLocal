@@ -4,7 +4,10 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
@@ -15,7 +18,7 @@ public class Pieza {
 
     int idPieza;
     String nombre;
-    
+
     int corTableroX;
     int corTableroY;
 
@@ -26,22 +29,26 @@ public class Pieza {
     LinkedList<Pieza> listaPiezas;
 
     public static BufferedImage imgPrincipal;
-    public static Image imgs[];
+    public static Image[] imgs;
+    public Image fotopieza;
 
-    public Pieza(int corTableroX, int corTableroY, boolean esBlanco, LinkedList<Pieza> listaPiezas) {
+    public Pieza(int corTableroX, int corTableroY, boolean esBlanco, LinkedList<Pieza> listaPiezas ,  String nombre) {
 
         this.corTableroX = corTableroX;
         this.corTableroY = corTableroY;
         this.corVentX = corTableroX * 64;
         this.corVentY = corTableroY * 64;
         this.esBlanco = esBlanco;
+        this.nombre = nombre;
+        listaPiezas.add(this);
         this.listaPiezas = listaPiezas;
 
-        listaPiezas.add(this);
+        fotopieza = subirImage();
+
     }
 
-    public void guardarImage() throws IOException {
-        imgPrincipal = ImageIO.read(new File("C:\\xampp\\htdocs\\ChessMutiplayerLocal\\src\\img\\pieces.png"));
+    public static void guardarImage() throws IOException {
+        imgPrincipal = ImageIO.read(new File("D:\\Archivos-Usuario\\Documentos\\NetBeansProjects\\ChessMutiplayerLocal\\src\\img\\pieces.png"));
         imgs = new Image[12];
         int ind = 0;
         for (int y = 0; y < 400; y += 200) {
@@ -52,9 +59,14 @@ public class Pieza {
         }
     }
 
-    public Image subirImage(int x, int y) {
-        for (Pieza p : listaPiezas) {
+    public Image subirImage() {
+        try {
+            guardarImage();
+        } catch (IOException ex) {
+            Logger.getLogger(Pieza.class.getName()).log(Level.SEVERE, null, ex);
+        }
             int ind = 0;
+        for (Pieza p : listaPiezas) {
             if (p.nombre.equalsIgnoreCase("rey")) {
                 ind = 0;
             }
@@ -78,24 +90,51 @@ public class Pieza {
             }
             //Dibujar la imagen del objeto pieza, 
             //g.drawImage(imgs[ind], p.x, p.y, this);
+            fotopieza = imgs[ind];
         }
-        return imgs[0];
+        
+        System.out.println("PASO POR EL METODO SUBIRTIMAGE: \n "  + 
+                "Int =  " + ind  +
+                "\nImage = " + fotopieza +
+                "\nListaPieza : " + listaPiezas +
+                "\nNombre = " + nombre + 
+                "\nColeccion = " + imgs[ind]
+                
+        
+        );
+         fotopieza = imgs[ind];
+        return fotopieza;
     }
 
-    
-    public int[][] marcarMovimiento(int posicionX, int posicionY) {
-        int[][] arrglo= null;
+    public ArrayList<Coordenada> marcarMovimiento(int posicionX, int posicionY) {
+        ArrayList<Coordenada> arrglo = null;
         return arrglo;
     }
     
-    public void mover() {
+    
+    public void mover(int xp, int yp){
+         if (Tablero1.getPiece(xp * 64, yp * 64) != null) {
+            if (Tablero1.getPiece(xp * 64, yp * 64).esBlanco != esBlanco) {
+                Tablero1.getPiece(xp * 64, yp * 64).asesinar();
+
+            } else {
+                corVentX = this.corTableroX * 64;
+                corVentY = this.corTableroY * 64;
+                System.out.println("No puede matar a su mismo color, no sea Imbecil >:v");
+                return;
+            }
+        }
+        this.corTableroX = xp;
+        this.corTableroY = yp;
+        corVentX = xp * 64;
+        corVentY = yp * 64;
     }
 
+ 
     public void asesinar() {
+        listaPiezas.remove(this);
     }
 
-    public void marcar() {
 
-    }
 
 }
